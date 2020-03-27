@@ -1,0 +1,6 @@
+[12-Mar-2020 17:32:55 America/New_York] PHP Warning:  require_once(vendor/autoload.php): failed to open stream: No such file or directory in Command line code on line 1
+[12-Mar-2020 17:32:55 America/New_York] PHP Stack trace:
+[12-Mar-2020 17:32:55 America/New_York] PHP   1. {main}() Command line code:0
+[12-Mar-2020 17:32:55 America/New_York] PHP Fatal error:  require_once(): Failed opening required 'vendor/autoload.php' (include_path='.:/usr/share/php') in Command line code on line 1
+[12-Mar-2020 17:32:55 America/New_York] PHP Stack trace:
+[12-Mar-2020 17:32:55 America/New_York] PHP   1. {main}() Command line code:0
