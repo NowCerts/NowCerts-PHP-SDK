@@ -34,4 +34,12 @@ final class HttpClientTest extends TestCase {
     $this->assertInstanceOf('\NowCerts\OAuth', \NowCerts\HttpClient::getOAuth());
   }
 
+  public function testOAuth(): void {
+    \NowCerts\HttpClient::authenticateWithPassword("test", "test");
+    $oauth = \NowCerts\HttpClient::getOAuth();
+    $oauth->scope = 'fake scope';
+    \NowCerts\HttpClient::setOAuth($oauth);
+    $this->assertEquals('fake scope', \NowCerts\HttpClient::getOAuth()->scope);
+  }
+
 }

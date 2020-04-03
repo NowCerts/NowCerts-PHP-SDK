@@ -318,4 +318,14 @@ class HttpClient {
     return self::$oauth;
   }
 
+  /**
+   * Sets the client's OAuth object.
+   *
+   * @param \NowCerts\OAuth $oauth
+   *   The OAuth object to set.
+   */
+  public static function setOAuth(OAuth $oauth) {
+    self::$oauth = $oauth;
+  }
+
 }
