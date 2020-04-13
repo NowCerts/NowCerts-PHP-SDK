@@ -104,8 +104,35 @@ final class InsuredTest extends NowCertsTestCase {
     parent::setUp();
   }
 
+  public function testGetInsuredsList(): void {
+    $insureds = \NowCerts\Insured::getList(array(), array(), 'lastName', 'desc', 0, 2);
+    // 2 values were requested.
+    $this->assertSame(2, count($insureds));
+    // Check sort order.
+    $this->assertSame(1, strcmp($insureds[0]['lastName'], $insureds[1]['lastName']));
+
+    $columns = array(
+      'id',
+      'commercialName',
+      'firstName',
+      'lastName',
+      'type',
+      'email',
+      'phone',
+      'city',
+      'state',
+      'zip',
+    );
+    $insureds = \NowCerts\Insured::getList(array('firstName' => 'Dimitur'), $columns, 'lastName', 'desc', 0, 2);
+    // Columns were specified, so make sure they are present and others are not.
+    $this->assertTrue(array_key_exists('email', $insureds[0]));
+    $this->assertFalse(array_key_exists('primaryRole', $insureds[0]));
+    // Check that firstName filter worked.
+    $this->assertTrue(strpos('Dimitur', $insureds[0]['firstName']) !== FALSE);
+  }
+
   public function testGetInsureds(): void {
-    $insureds = \NowCerts\Insured::getList();
+    $insureds = \NowCerts\Insured::getInsureds();
     $this->assertSame(\NowCerts\Insured::class, get_class($insureds[0]));
   }
 

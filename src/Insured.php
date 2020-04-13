@@ -300,13 +300,114 @@ class Insured {
   /**
    * Gets a list of insureds.
    *
+   * For fully-loaded Insured objects see getInsureds().
+   *
+   * @param array $search_criteria
+   *   An associative array of filters. The supported filters are:
+   *   - (int) type: 0 for "Commercial", 1 for "Personal".
+   *   - (string) firstName: Filter on firstName.
+   *   - (string) lastName: Filter on lastName.
+   *   - (string) email: Filter on email.
+   *   Each filter may be an array where the "value" key contains the value on
+   *   which to filter and the "op" key contains either "eq" or "contains".
+   * @param array $columns
+   *   The names of the columns to be returned. Use an empty array to avoid
+   *   restriction. Supported values include:
+   *   - id
+   *   - commercialName
+   *   - firstName
+   *   - lastName
+   *   - type
+   *   - email
+   *   - phone
+   *   - city
+   *   - state
+   *   - zip
+   * @param string $order_by
+   *   The machine name of the column on which to sort. Supported values
+   *   include:
+   *   - type
+   *   - email
+   * @param string $order_by_direction
+   *   Either "asc" or "desc".
+   * @param int $page
+   *   The multiple of $per_page to skip.
+   * @param int $per_page
+   *   The number of items per page.
+   *
+   * @return array
+   *   An indexed array of matching insureds where each element is an
+   *   associative array of fields and values as specified by the $columns
+   *   argument.
+   *
+   * @see http://test.api.nowcerts.com/SearchInsureds
+   */
+  public static function getList(array $search_criteria = array(), array $columns = array(), $order_by = NULL, $order_by_direction = 'asc', $page = NULL, $per_page = NULL) {
+    $arguments = array();
+    $filter_parts = array();
+    $supported_filters = array(
+      'type' => "eq",
+      'firstName' => "contains",
+      'lastName' => "contains",
+      'email' => "contains",
+    );
+    foreach ($supported_filters as $supported_filter => $default_op) {
+      if (!empty($search_criteria[$supported_filter])) {
+        if (is_array($search_criteria[$supported_filter])) {
+          $filter_value = $search_criteria[$supported_filter]['value'];
+          $op = $search_criteria[$supported_filter]['op'];
+        }
+        else {
+          $filter_value = $search_criteria[$supported_filter];
+          $op = $default_op;
+        }
+        if ($op == "eq") {
+          $filter_parts[] = "(" . $supported_filter . " eq '" . $filter_value . "')";
+        }
+        elseif ($op == "contains") {
+          $filter_parts[] = "contains(" . $supported_filter . ", '" . $filter_value . "')";
+        }
+      }
+    }
+    if (!empty($filter_parts)) {
+      $arguments['$filter'] = implode(" and ", $filter_parts);
+    }
+    if (isset($order_by)) {
+      $arguments['$orderby'] = $order_by;
+      if (isset($order_by_direction)) {
+        $arguments['$orderby'] .= " $order_by_direction";
+      }
+    }
+    if (isset($page)) {
+      $arguments['$skip'] = $page * $per_page;
+    }
+    if ($per_page) {
+      $arguments['$top'] = $per_page;
+    }
+    if ($columns) {
+      $columns += array('id');
+      $arguments['$select'] = implode(",", $columns);
+    }
+    foreach ($arguments as &$argument) {
+      $argument = rawurlencode($argument);
+    }
+
+    $result = HttpClient::get("/InsuredList()", $arguments, array(
+      'raw_arguments' => TRUE,
+    ));
+    return $result['value'];
+  }
+
+  /**
+   * Gets a list of insureds.
+   *
    * @return \NowCerts\Insured[]
    *   An array of insureds where each element is an object of the type
    *   NowCerts\Insured.
    *
    * @see https://api.nowcerts.com/Help/Api/GET-api-Zapier-GetInsureds
    */
-  public static function getList() {
+  public static function getInsureds() {
     $insureds = array();
     $response = HttpClient::get("/Zapier/GetInsureds");
     foreach ($response as $item) {

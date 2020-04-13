@@ -326,7 +326,7 @@ class Policy {
    *
    * @return array
    *   An indexed array of matching policies where each element is an
-   *   associative array of fields and values as spcified by the $columns
+   *   associative array of fields and values as specified by the $columns
    *   argument.
    *
    * @see http://test.api.nowcerts.com/SearchPolicies
