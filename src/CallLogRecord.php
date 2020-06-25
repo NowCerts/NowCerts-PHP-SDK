@@ -109,7 +109,12 @@ class CallLogRecord {
 
         // Date objects.
         case 'start_date':
-          $this->$property = new DateTime($value);
+          if (is_string($value)) {
+            $this->$property = new DateTime($value);
+          }
+          else {
+            $this->$property = $value;
+          }
           break;
 
         // Floats.

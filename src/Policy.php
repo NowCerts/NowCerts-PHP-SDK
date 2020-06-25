@@ -252,7 +252,12 @@ class Policy {
         case 'reinstatementDate':
         case 'inceptionDate':
         case 'createDate':
-          $this->$property = new DateTime($value);
+          if (is_string($value)) {
+            $this->$property = new DateTime($value);
+          }
+          else {
+            $this->$property = $value;
+          }
           break;
 
         // PolicyBusinessType objects.

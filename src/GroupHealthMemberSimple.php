@@ -106,7 +106,12 @@ class GroupHealthMemberSimple {
 
         // DateTime objects.
         case 'dateOfBirth':
-          $this->$property = new DateTime($value);
+          if (is_string($value)) {
+            $this->$property = new DateTime($value);
+          }
+          else {
+            $this->$property = $value;
+          }
           break;
 
         // GroupHealthMemberMaritalStatus objects.

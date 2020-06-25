@@ -140,7 +140,12 @@ class Driver {
         // DateTime objects.
         case 'hire_date':
         case 'termination_date':
-          $this->$property = new DateTime($value);
+          if (is_string($value)) {
+            $this->$property = new DateTime($value);
+          }
+          else {
+            $this->$property = $value;
+          }
           break;
       }
     }

@@ -140,7 +140,12 @@ class Principal {
 
         // Date objects.
         case 'birthday':
-          $this->$property = new DateTime($value);
+          if (is_string($value)) {
+            $this->$property = new DateTime($value);
+          }
+          else {
+            $this->$property = $value;
+          }
           break;
       }
     }

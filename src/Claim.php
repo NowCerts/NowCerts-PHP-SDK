@@ -145,7 +145,12 @@ class Claim {
 
         // Date objects.
         case 'date_of_loss':
-          $this->$property = new DateTime($value);
+          if (is_string($value)) {
+            $this->$property = new DateTime($value);
+          }
+          else {
+            $this->$property = $value;
+          }
           break;
 
         // DateAmount object arrays.

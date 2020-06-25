@@ -109,7 +109,12 @@ class Sms {
 
         // Date objects.
         case 'date_and_time':
-          $this->$property = new DateTime($value);
+          if (is_string($value)) {
+            $this->$property = new DateTime($value);
+          }
+          else {
+            $this->$property = $value;
+          }
           break;
 
         // Booleans.

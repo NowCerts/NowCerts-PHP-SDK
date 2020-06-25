@@ -245,7 +245,12 @@ class Quote {
         case 'effective_date':
         case 'expiration_date':
         case 'bind_date':
-          $this->$property = new DateTime($value);
+          if (is_string($value)) {
+            $this->$property = new DateTime($value);
+          }
+          else {
+            $this->$property = $value;
+          }
           break;
 
         // PolicyBusinessType objects.
