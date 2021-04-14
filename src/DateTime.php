@@ -8,6 +8,19 @@ namespace NowCerts;
 class DateTime extends \DateTime implements \JsonSerializable {
 
   /**
+   * Creates a new DateTime object, accounting for the mm-dd-yyyy pattern.
+   */
+  public function __construct($datetime = "now" , $timezone = NULL) {
+    // The NowCerts API returns dates in the format mm-dd-yyyy. Change the
+    // order to something more standard so \DateTime can handle it. 
+    if (preg_match("/\d\d-\d\d-\d\d\d\d/", $datetime)) {
+      $parts = explode("-", $datetime);
+      $datetime = implode("-", array($parts[1], $parts[0], $parts[2]));
+    }
+    return parent::__construct($datetime, $timezone);
+  }
+
+  /**
    * Represents the date in the format the NowCerts API is expecting.
    *
    * @return string
